@@ -442,12 +442,12 @@ function sepa_civicrm_navigationMenu(&$params) {
   }
 
   if ($contribute_menu_id) {
+    // Add the new menu option
     $new_nav_id = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_navigation");
     if (is_integer($new_nav_id)) {
       $new_nav_id++;
     }
 
-    // Add the new menu option
     $params[$contribute_menu_id]['child'][$new_nav_id] = array(
       'attributes' => array (
         'label' => ts('CiviSEPA Dashboard', array('domain' => 'org.project60.sepa')),
@@ -457,6 +457,7 @@ function sepa_civicrm_navigationMenu(&$params) {
         'operator' => NULL,
         'separator' => 2,
         'parentID' => $contribute_menu_id,
+        'navID' => $new_nav_id,
         'active' => 1
       )
     );
