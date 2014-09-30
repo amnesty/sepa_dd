@@ -457,7 +457,6 @@ function sepa_civicrm_navigationMenu(&$params) {
         'operator' => NULL,
         'separator' => 2,
         'parentID' => $contribute_menu_id,
-        'navID' => $new_nav_id,
         'active' => 1
       )
     );
