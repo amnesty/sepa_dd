@@ -428,31 +428,39 @@ function sepa_civicrm_navigationMenu(&$params) {
   $menu_item_search = array('url' => 'civicrm/sepa');
   $menu_items = array();
   CRM_Core_BAO_Navigation::retrieve($menu_item_search, $menu_items);
- 
-  if (!empty($menu_items)) {
+
+  if ($menu_items) {
     return;
   }
 
   // Find the CiviContribute menu
-  $civiContributeID = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_Navigation', 'Contributions', 'id', 'name');
-  if (!empty($civiContributeID)) {
-    $civiContributeChildren = $params[$civiContributeID]['child'];
-  
-    // now insert the CiviSEPA dashboard element
-    $newNavId = $lastElement['attributes']['navID'] + 1;
+  $contribute_menu_id = Null;
+  foreach($params as $key => $value) {
+    if($value['attributes']['name'] == "Contributions") {
+      $contribute_menu_id = $key;
+    }
+  }
 
-    $params[$civiContributeID]['child'][$newNavId] = array(
-        'attributes' => array (
-        'label' => ts('CiviSEPA Dashboard',array('domain' => 'org.project60.sepa')),
+  if ($contribute_menu_id) {
+    $new_nav_id = CRM_Core_DAO::singleValueQuery("SELECT max(id) FROM civicrm_navigation");
+    if (is_integer($new_nav_id)) {
+      $new_nav_id++;
+    }
+
+    // Add the new menu option
+    $params[$contribute_menu_id]['child'][$new_nav_id] = array(
+      'attributes' => array (
+        'label' => ts('CiviSEPA Dashboard', array('domain' => 'org.project60.sepa')),
         'name' => 'Dashboard',
         'url' => 'civicrm/sepa',
         'permission' => 'administer CiviCRM',
         'operator' => NULL,
         'separator' => 2,
-        'parentID' => $civiContributeID,
-        'navID' => $newNavId,
+        'parentID' => $contribute_menu_id,
+        'navID' => $new_nav_id,
         'active' => 1
-      ));
+      )
+    );
   }
 }
 
